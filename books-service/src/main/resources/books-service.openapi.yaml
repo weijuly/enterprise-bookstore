@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: Books Service
+  version: 0.0.1
+paths:
+  /books:
+    get:
+      description: Search for books
+      operationId: searchBooks
+      parameters:
+        - in: query
+          name: title
+          description: Part or full title of the book
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: author
+          description: Part or full name of the authors
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: published_after
+          description: Get books that were published after this year
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: published_before
+          description: Get books that were published before this year
+          schema:
+            type: integer
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/SearchBooks'
+        '400':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        isbn:
+          type: string
+        summary:
+          type: string
+        published_on:
+          type: integer
+        pages:
+          type: integer
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+        genres:
+          type: array
+          items:
+            type: string
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        about:
+          type: string
+        genres:
+          type: array
+          items:
+            type: string
+    Error:
+      type: object
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+    SearchBooks:
+      type: object
+      properties:
+        page:
+          type: integer
+        total:
+          type: integer
+        size:
+          type: integer
+        books:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+
+  responses:
+    SearchBooks:
+      description: Search books results
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SearchBooks'
+    NotFound:
+      description: The specified resource was not found in the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: The specified resource was not found in the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Something went wrong when processing the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+
