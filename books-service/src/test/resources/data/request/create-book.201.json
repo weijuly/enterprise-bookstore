@@ -1,0 +1,21 @@
+{
+    "title": "Some Book Title",
+    "isbn": "1234567890",
+    "summary": "Some Book Summary",
+    "published_on": "1977",
+    "pages": "200",
+    "authors": [
+        {
+            "name": "Author 1",
+            "about": "Author 1 about"
+        },
+        {
+            "name": "Author 1",
+            "about": "Author 1 about"
+        }
+    ],
+    "genres": [
+        "SCI-FI",
+        "THRILLER"
+    ]
+}

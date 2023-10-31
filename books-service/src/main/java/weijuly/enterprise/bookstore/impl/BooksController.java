@@ -1,23 +1,28 @@
 package weijuly.enterprise.bookstore.impl;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import weijuly.enterprise.bookstore.api.BooksApi;
+import weijuly.enterprise.bookstore.model.Book;
 import weijuly.enterprise.bookstore.model.SearchBooks;
-
-import java.util.Collections;
+import weijuly.enterprise.bookstore.service.BooksService;
 
 @RestController
 public class BooksController implements BooksApi {
 
+    @Autowired
+    BooksService booksService;
+
     @Override
     public ResponseEntity<SearchBooks> searchBooks(String title, String author, Integer publishedAfter,
                                                    Integer publishedBefore) {
-        return ResponseEntity.ok(new SearchBooks()
-                .page(0)
-                .size(0)
-                .total(0)
-                .books(Collections.emptyList()));
+        return ResponseEntity.ok(booksService.search());
+    }
+
+    @Override
+    public ResponseEntity<Book> addBook(Book book) {
+        return ResponseEntity.ok(booksService.add(book));
     }
 }

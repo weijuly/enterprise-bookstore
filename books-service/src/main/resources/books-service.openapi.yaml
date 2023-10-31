@@ -39,6 +39,21 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+    post:
+      description: Add a new book
+      operationId: addBook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':
+          $ref: '#/components/responses/Book'
+        '400':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
     Book:
@@ -97,8 +112,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Book'
-
   responses:
+    Book:
+      description: A book
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Book'
     SearchBooks:
       description: Search books results
       content:
