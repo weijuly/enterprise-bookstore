@@ -2,6 +2,7 @@ package weijuly.enterprise.bookstore.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weijuly.enterprise.bookstore.data.entity.*;
@@ -54,7 +55,7 @@ public class BooksService {
     public Book add(Book book) {
         try {
             if (exists(book)) {
-                throw new BookServiceException(400, "Book already exists");
+                throw new BookServiceException(HttpStatus.BAD_REQUEST, "Book already exists");
             }
             BookEntity bookEntity = addBook(book);
             List<AuthorEntity> authorEntities = updateAuthors(book.getAuthors());
@@ -86,6 +87,19 @@ public class BooksService {
         } catch (BookServiceException e) {
             return null;
         }
+    }
+
+    public Book getBookById(String id) {
+        return bookRepository
+                .findById(id)
+                .map(this::somega)
+                .orElseThrow(() -> new BookServiceException(
+                        HttpStatus.NOT_FOUND,
+                        String.format("Book with id: %s not found", id)));
+    }
+
+    private Book somega(BookEntity e) {
+        return new Book();
     }
 
     private boolean exists(Book book) {

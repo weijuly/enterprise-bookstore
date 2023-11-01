@@ -2,6 +2,11 @@ openapi: 3.0.0
 info:
   title: Books Service
   version: 0.0.1
+servers:
+  - url: http://localhost:8080/
+    description: local server
+  - url: https://enterprise-bookstore.com/api/
+    description: production server
 paths:
   /books:
     get:
@@ -54,6 +59,53 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /books/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: id of the book
+        schema:
+          type: string
+        required: true
+    get:
+      description: Get details about a book
+      operationId: getBookById
+      responses:
+        '200':
+          $ref: '#/components/responses/Book'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    patch:
+      description: Update details of a book
+      operationId: updateBookById
+      requestBody:
+        content:
+          application/json-patch+json:
+            schema:
+              $ref: '#/components/schemas/Patches'
+      responses:
+        '204':
+          description: The book was updated successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    delete:
+      description: Delete a book
+      operationId: deleteBookById
+      responses:
+        '204':
+          description: The book was deleted successfully.
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
     Book:
@@ -92,13 +144,47 @@ components:
           type: array
           items:
             type: string
-    Error:
+    ProblemDetails:
       type: object
       properties:
         id:
           type: string
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
         description:
           type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        name:
+          type: string
+        reason:
+          type: string
+    Patch:
+      type: object
+      properties:
+        op:
+          type: string
+        path:
+          type: string
+        value:
+          type: object
+    Patches:
+      type: array
+      items:
+        $ref: '#/components/schemas/Patch'
     SearchBooks:
       type: object
       properties:
@@ -130,18 +216,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/ProblemDetails'
     BadRequest:
-      description: The specified resource was not found in the server.
+      description: The request is malformed.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/ProblemDetails'
     InternalServerError:
       description: Something went wrong when processing the request.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/ProblemDetails'
 
 

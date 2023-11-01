@@ -16,7 +16,9 @@ public class BooksController implements BooksApi {
     BooksService booksService;
 
     @Override
-    public ResponseEntity<SearchBooks> searchBooks(String title, String author, Integer publishedAfter,
+    public ResponseEntity<SearchBooks> searchBooks(String title,
+                                                   String author,
+                                                   Integer publishedAfter,
                                                    Integer publishedBefore) {
         return ResponseEntity.ok(booksService.search());
     }
@@ -24,5 +26,10 @@ public class BooksController implements BooksApi {
     @Override
     public ResponseEntity<Book> addBook(Book book) {
         return ResponseEntity.ok(booksService.add(book));
+    }
+
+    @Override
+    public ResponseEntity<Book> getBookById(String id) {
+        return ResponseEntity.ok(booksService.getBookById(id));
     }
 }
