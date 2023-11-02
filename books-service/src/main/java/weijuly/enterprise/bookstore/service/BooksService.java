@@ -1,8 +1,10 @@
 package weijuly.enterprise.bookstore.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import weijuly.enterprise.bookstore.data.entity.*;
@@ -16,6 +18,7 @@ import weijuly.enterprise.bookstore.transformer.BibliographyTransformer;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static weijuly.enterprise.bookstore.transformer.AuthorTransformer.transform;
@@ -43,6 +46,9 @@ public class BooksService {
     @Autowired
     private AuthorGenreRepository authorGenreRepository;
 
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
     public SearchBooks search() {
         return new SearchBooks()
                 .books(Collections.emptyList())
@@ -53,40 +59,38 @@ public class BooksService {
 
     @Transactional
     public Book add(Book book) {
-        try {
-            if (exists(book)) {
-                throw new BookServiceException(HttpStatus.BAD_REQUEST, "Book already exists");
-            }
-            BookEntity bookEntity = addBook(book);
-            List<AuthorEntity> authorEntities = updateAuthors(book.getAuthors());
-            List<GenreEntity> genreEntities = updateGenres(book.getGenres());
-            addBookGenres(
-                    bookEntity.id(),
-                    genreEntities
-                            .stream()
-                            .map(GenreEntity::id)
-                            .collect(Collectors.toList()));
-            addBibliographies(
-                    bookEntity.id(),
-                    authorEntities
-                            .stream()
-                            .map(AuthorEntity::id)
-                            .collect(Collectors.toList()));
-            updateAuthorsGenres(
-                    authorEntities
-                            .stream()
-                            .map(AuthorEntity::id)
-                            .collect(Collectors.toList()),
-                    genreEntities
-                            .stream()
-                            .map(GenreEntity::id)
-                            .collect(Collectors.toList())
-            );
-            return book;
-
-        } catch (BookServiceException e) {
-            return null;
+        if (exists(book)) {
+            throw new BookServiceException(HttpStatus.BAD_REQUEST, "Book already exists");
         }
+        BookEntity bookEntity = addBook(book);
+        List<AuthorEntity> authorEntities = updateAuthors(book.getAuthors());
+        List<GenreEntity> genreEntities = updateGenres(book.getGenres());
+        addBookGenres(
+                bookEntity.id(),
+                genreEntities
+                        .stream()
+                        .map(GenreEntity::id)
+                        .collect(Collectors.toList()));
+        addBibliographies(
+                bookEntity.id(),
+                authorEntities
+                        .stream()
+                        .map(AuthorEntity::id)
+                        .collect(Collectors.toList()));
+        updateAuthorsGenres(
+                authorEntities
+                        .stream()
+                        .map(AuthorEntity::id)
+                        .collect(Collectors.toList()),
+                genreEntities
+                        .stream()
+                        .map(GenreEntity::id)
+                        .collect(Collectors.toList())
+        );
+        book.id(bookEntity.id());
+        publish(book);
+        return book;
+
     }
 
     public Book getBookById(String id) {
@@ -186,5 +190,24 @@ public class BooksService {
         return authorRepository
                 .findByFullName(author.getName())
                 .orElseGet(() -> authorRepository.save(transform(author)));
+    }
+
+    private void publish(Book book) {
+        try {
+            String payload = new ObjectMapper().writeValueAsString(book);
+            System.out.println(payload);
+            kafkaTemplate
+                    .send("books", payload)
+                    .whenComplete((r, e) -> {
+                        if (Objects.nonNull(e)) {
+                            System.out.println("Something went wrong: " + e.toString());
+                        } else {
+                            System.out.println("published message with offset: " + r.getRecordMetadata().offset());
+                        }
+                    });
+
+        } catch (Exception e) {
+            System.out.println("Something went wrong");
+        }
     }
 }

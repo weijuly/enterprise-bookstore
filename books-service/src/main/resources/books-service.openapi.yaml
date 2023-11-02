@@ -9,41 +9,6 @@ servers:
     description: production server
 paths:
   /books:
-    get:
-      description: Search for books
-      operationId: searchBooks
-      parameters:
-        - in: query
-          name: title
-          description: Part or full title of the book
-          schema:
-            type: string
-          required: false
-        - in: query
-          name: author
-          description: Part or full name of the authors
-          schema:
-            type: string
-          required: false
-        - in: query
-          name: published_after
-          description: Get books that were published after this year
-          schema:
-            type: integer
-          required: false
-        - in: query
-          name: published_before
-          description: Get books that were published before this year
-          schema:
-            type: integer
-          required: false
-      responses:
-        '200':
-          $ref: '#/components/responses/SearchBooks'
-        '400':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
     post:
       description: Add a new book
       operationId: addBook
@@ -96,16 +61,6 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
-    delete:
-      description: Delete a book
-      operationId: deleteBookById
-      responses:
-        '204':
-          description: The book was deleted successfully.
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
     Book:

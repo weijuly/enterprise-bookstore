@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import weijuly.enterprise.bookstore.api.BooksApi;
 import weijuly.enterprise.bookstore.model.Book;
-import weijuly.enterprise.bookstore.model.SearchBooks;
 import weijuly.enterprise.bookstore.service.BooksService;
 
 @RestController
@@ -14,14 +13,6 @@ public class BooksController implements BooksApi {
 
     @Autowired
     BooksService booksService;
-
-    @Override
-    public ResponseEntity<SearchBooks> searchBooks(String title,
-                                                   String author,
-                                                   Integer publishedAfter,
-                                                   Integer publishedBefore) {
-        return ResponseEntity.ok(booksService.search());
-    }
 
     @Override
     public ResponseEntity<Book> addBook(Book book) {

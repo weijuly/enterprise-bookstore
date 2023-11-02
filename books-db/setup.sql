@@ -23,9 +23,9 @@ create table BOOK (
 drop table if exists AUTHOR;
 create table AUTHOR (
     ID              VARCHAR(64)         PRIMARY KEY,
-    FULL_NAME       VARCHAR(256)        NOT NULL,
+    FULL_NAME       VARCHAR(256)        NOT NULL UNIQUE,
     ABOUT           VARCHAR(1024)       NOT NULL
-);
+);  
 
 drop table if exists BIBLIOGRAPHY;
 create table BIBLIOGRAPHY (

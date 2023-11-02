@@ -3,10 +3,8 @@ echo "Stopping container: books-database ..."
 docker stop books-database
 echo "Removing container: books-database ..."
 docker rm books-database
-echo "Building image: books-database ..."
-docker build -t books-database .
 echo "Running image: books-database ..."
-docker run --name books-database --publish 3306:3306 --detach books-database
+docker run --name books-database --publish 3306:3306 --detach books-database:0.0.1-20231101060505
 echo "Waiting for 5 secs ..."
 sleep 5
 echo "Please check if the container is running using this command:"
