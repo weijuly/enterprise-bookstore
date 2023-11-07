@@ -1,12 +1,11 @@
 package weijuly.enterprise.bookstore.service;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import weijuly.enterprise.bookstore.client.NotificationClient;
 import weijuly.enterprise.bookstore.data.entity.*;
 import weijuly.enterprise.bookstore.data.repository.*;
 import weijuly.enterprise.bookstore.error.BookServiceException;
@@ -18,7 +17,6 @@ import weijuly.enterprise.bookstore.transformer.BibliographyTransformer;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static weijuly.enterprise.bookstore.transformer.AuthorTransformer.transform;
@@ -47,7 +45,7 @@ public class BooksService {
     private AuthorGenreRepository authorGenreRepository;
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private NotificationClient notificationClient;
 
     public SearchBooks search() {
         return new SearchBooks()
@@ -193,21 +191,6 @@ public class BooksService {
     }
 
     private void publish(Book book) {
-        try {
-            String payload = new ObjectMapper().writeValueAsString(book);
-            System.out.println(payload);
-            kafkaTemplate
-                    .send("books", payload)
-                    .whenComplete((r, e) -> {
-                        if (Objects.nonNull(e)) {
-                            System.out.println("Something went wrong: " + e.toString());
-                        } else {
-                            System.out.println("published message with offset: " + r.getRecordMetadata().offset());
-                        }
-                    });
-
-        } catch (Exception e) {
-            System.out.println("Something went wrong");
-        }
+        notificationClient.notify(book);
     }
 }

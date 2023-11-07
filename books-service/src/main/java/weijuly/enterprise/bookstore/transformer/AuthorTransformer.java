@@ -2,6 +2,7 @@ package weijuly.enterprise.bookstore.transformer;
 
 import weijuly.enterprise.bookstore.data.entity.AuthorEntity;
 import weijuly.enterprise.bookstore.model.Author;
+import weijuly.enterprise.bookstore.model.proto.AuthorProto;
 
 public class AuthorTransformer {
 
@@ -10,5 +11,13 @@ public class AuthorTransformer {
                 .id(author.getId())
                 .fullName(author.getName())
                 .about(author.getAbout());
+    }
+
+    public static AuthorProto proto(Author author) {
+        return AuthorProto
+                .newBuilder()
+                .setName(author.getName())
+                .setAbout(author.getAbout())
+                .build();
     }
 }

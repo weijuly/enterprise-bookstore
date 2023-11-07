@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_package = "weijuly.enterprise.bookstore.model.proto";
+option java_multiple_files = true;
+option java_outer_classname = "ProtoMessages";
+
+message BookProto {
+  string id = 1;
+  string title = 2;
+  string isbn = 3;
+  string summary = 4;
+  int32 published_on = 5;
+  int32 pages = 6;
+  repeated string genres = 7;
+  repeated AuthorProto authors = 8;
+}
+
+message AuthorProto {
+  string id = 1;
+  string name = 2;
+  string about = 3;
+}

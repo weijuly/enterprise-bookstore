@@ -22,6 +22,5 @@ public class IntegrationTest {
         ResponseEntity<String> response = template.postForEntity("http://localhost:8080/books", request, String.class);
         System.out.println(response.getStatusCode());
         System.out.println(response.getBody());
-
     }
 }
