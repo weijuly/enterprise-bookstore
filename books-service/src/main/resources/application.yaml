@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: books-service
   datasource:
     url: @database.url@
     driverClassName: com.mysql.cj.jdbc.Driver
@@ -18,3 +20,13 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+
+tracing:
+  url:
+    http://localhost:4317

@@ -12,7 +12,7 @@ import weijuly.enterprise.bookstore.service.BooksService;
 public class BooksController implements BooksApi {
 
     @Autowired
-    BooksService booksService;
+    private BooksService booksService;
 
     @Override
     public ResponseEntity<Book> addBook(Book book) {

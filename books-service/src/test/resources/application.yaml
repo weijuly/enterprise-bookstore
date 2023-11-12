@@ -6,3 +6,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+
+tracing:
+  url: http://localhost:47017

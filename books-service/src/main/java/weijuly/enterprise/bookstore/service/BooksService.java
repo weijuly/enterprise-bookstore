@@ -57,6 +57,7 @@ public class BooksService {
 
     @Transactional
     public Book add(Book book) {
+        System.out.println("adding books");
         if (exists(book)) {
             throw new BookServiceException(HttpStatus.BAD_REQUEST, "Book already exists");
         }
