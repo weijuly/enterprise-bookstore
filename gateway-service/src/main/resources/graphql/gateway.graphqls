@@ -1,0 +1,41 @@
+type Query {
+    search(term: String): [Book]
+}
+
+
+type Mutation {
+    create(book: BookIn): [Book]
+}
+
+
+type Book {
+    id: ID!
+    isbn: String!
+    title: String!
+    summary: String!
+    published_on: Int!
+    pages: Int!
+    authors: [Author!]!
+    genres: [String!]!
+}
+
+type Author {
+    id: ID!
+    name: String!
+    about: String!
+}
+
+input BookIn {
+    isbn: String!
+    title: String!
+    summary: String!
+    published_on: Int!
+    pages: Int!
+    authors: [AuthorIn!]!
+    genres: [String!]!
+}
+
+input AuthorIn {
+    name: String!
+    about: String!
+}
