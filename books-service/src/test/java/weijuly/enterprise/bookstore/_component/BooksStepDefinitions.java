@@ -116,7 +116,7 @@ public class BooksStepDefinitions {
         when(authorRepository.save(any(AuthorEntity.class)))
                 .thenReturn(new AuthorEntity()
                         .id(UUID.randomUUID().toString())
-                        .fullName(name));
+                        .name(name));
     }
 
 
@@ -188,7 +188,7 @@ public class BooksStepDefinitions {
     public void validateInsertAuthor(String name) {
         verify(authorRepository, times(1))
                 .save(argThat(authorEntity -> {
-                    assertEquals(authorEntity.fullName(), name);
+                    assertEquals(authorEntity.name(), name);
                     return true;
                 }));
 

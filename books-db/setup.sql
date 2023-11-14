@@ -23,7 +23,7 @@ create table BOOK (
 drop table if exists AUTHOR;
 create table AUTHOR (
     ID              VARCHAR(64)         PRIMARY KEY,
-    FULL_NAME       VARCHAR(256)        NOT NULL UNIQUE,
+    AUTHOR_NAME     VARCHAR(256)        NOT NULL UNIQUE,
     ABOUT           VARCHAR(1024)       NOT NULL
 );  
 
@@ -92,7 +92,7 @@ commit;
 
 
 insert into AUTHOR
-    (ID, FULL_NAME, ABOUT)
+    (ID, AUTHOR_NAME, ABOUT)
 values
     ('48b9d512-61d5-4953-a245-ebd1548f8f47', 'Charles Dickens', 'Charles Dickens'),
     ('376f7bf2-4063-4163-9ee1-ee674d44614e', 'Jules Verne', 'Jules Verne'),

@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface AuthorRepository extends CrudRepository<AuthorEntity, String> {
 
-    Optional<AuthorEntity> findByFullName(String fullName);
+    Optional<AuthorEntity> findByName(String name);
 }

@@ -9,7 +9,7 @@ public class AuthorTransformer {
     public static AuthorEntity transform(Author author) {
         return new AuthorEntity()
                 .id(author.getId())
-                .fullName(author.getName())
+                .name(author.getName())
                 .about(author.getAbout());
     }
 

@@ -187,7 +187,7 @@ public class BooksService {
 
     private AuthorEntity updateAuthor(Author author) {
         return authorRepository
-                .findByFullName(author.getName())
+                .findByName(author.getName())
                 .orElseGet(() -> authorRepository.save(transform(author)));
     }
 

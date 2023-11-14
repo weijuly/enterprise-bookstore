@@ -21,8 +21,8 @@ public class AuthorEntity {
     @GeneratedValue(generator = "authorId")
     private String id;
 
-    @Column(name = "FULL_NAME", nullable = false)
-    private String fullName;
+    @Column(name = "AUTHOR_NAME", nullable = false)
+    private String name;
 
     @Column(name = "ABOUT", nullable = false)
     private String about;
